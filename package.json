@@ -4,8 +4,11 @@
   "type": "module",
   "private": true,
   "devDependencies": {
+    "@flatten-js/core": "^1.6.8",
+    "@tscircuit/alphabet": "^0.0.8",
     "@types/bun": "latest",
-    "bun-match-svg": "^0.0.14"
+    "bun-match-svg": "^0.0.14",
+    "circuit-json": "^0.0.326"
   },
   "peerDependencies": {
     "typescript": "^5"
