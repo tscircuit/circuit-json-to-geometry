@@ -63,5 +63,27 @@ export const polygonFromPoints = (
   origin: { x: number; y: number },
 ) => new Polygon(points.map((p) => point(p.x + origin.x, p.y + origin.y)))
 
+/** Map pad-local points through ccw rotation about a board-space center. */
+export const polygonFromLocalPoints = (
+  points: Array<{ x: number; y: number }>,
+  center: { x: number; y: number },
+  origin: { x: number; y: number },
+  rotationDeg = 0,
+): Polygon => {
+  const angleRad = (rotationDeg * Math.PI) / 180
+  const cosAngle = Math.cos(angleRad)
+  const sinAngle = Math.sin(angleRad)
+  const cx = center.x + origin.x
+  const cy = center.y + origin.y
+  return new Polygon(
+    points.map((p) =>
+      point(
+        cx + p.x * cosAngle - p.y * sinAngle,
+        cy + p.x * sinAngle + p.y * cosAngle,
+      ),
+    ),
+  )
+}
+
 export const toOptionalNumber = (value: unknown): number | undefined =>
   isFiniteNumber(value) ? value : undefined
