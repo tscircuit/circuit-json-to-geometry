@@ -1,14 +1,13 @@
 import type { Polygon } from "@flatten-js/core"
 import Flatten from "@flatten-js/core"
 import type { PcbPlatedHole, Point } from "circuit-json"
-
-import { ensureLayerBucket, type LayerBuckets } from "../../layers/layerBuckets"
-import {
-  createRectPolygon,
-  circleToPolygon,
-  polygonFromPoints,
-} from "../../helpers/polygons"
 import { isFiniteNumber } from "../../helpers/isFiniteNumber"
+import {
+  circleToPolygon,
+  createRectPolygon,
+  polygonFromLocalPoints,
+} from "../../helpers/polygons"
+import { ensureLayerBucket, type LayerBuckets } from "../../layers/layerBuckets"
 
 export const addPlatedHoleCopper = (
   hole: PcbPlatedHole,
@@ -104,7 +103,12 @@ export const addPlatedHoleCopper = (
     case "hole_with_polygon_pad": {
       const padOutline = (hole as any).pad_outline as Point[] | undefined
       if (!padOutline || padOutline.length < 3) return
-      const poly = polygonFromPoints(padOutline, origin)
+      const poly = polygonFromLocalPoints(
+        padOutline,
+        { x: hole.x, y: hole.y },
+        origin,
+        (hole as any).ccw_rotation ?? 0,
+      )
       pushToLayers(poly)
       break
     }
